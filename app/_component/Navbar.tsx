@@ -13,8 +13,8 @@ export default function Navbar() {
 
         <ul className={styles.links}>
           <li>
-            <Link href="/" className={styles.link}>
-              Dashboard
+            <Link href="/state" className={styles.link}>
+              State
             </Link>
           </li>
           <li>
