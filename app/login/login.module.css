@@ -29,15 +29,54 @@
   opacity: 0.8;
 }
 
+.form {
+  margin-top: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  font-weight: 800;
+  font-size: 13px;
+  opacity: 0.92;
+}
+
+.input {
+  height: 42px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  padding: 0 12px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--foreground);
+}
+
+.input:focus {
+  border-color: rgba(0, 0, 0, 0.32);
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.08);
+}
+
 .actions {
   margin-top: 14px;
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .primary,
-.secondary {
+.secondary,
+.tertiary {
   height: 40px;
   display: inline-flex;
   align-items: center;
@@ -52,6 +91,12 @@
 .primary {
   background: rgba(0, 0, 0, 0.92);
   color: white;
+  cursor: pointer;
+}
+
+.primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .secondary {
@@ -60,9 +105,34 @@
   opacity: 0.9;
 }
 
-.secondary:hover {
+.secondary:hover,
+.tertiary:hover {
   opacity: 1;
   background: rgba(0, 0, 0, 0.04);
+}
+
+.tertiary {
+  background: transparent;
+  color: var(--foreground);
+  opacity: 0.75;
+}
+
+.alertError {
+  margin-top: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(220, 38, 38, 0.28);
+  background: rgba(220, 38, 38, 0.08);
+  padding: 10px 12px;
+  font-weight: 700;
+}
+
+.alertSuccess {
+  margin-top: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(34, 197, 94, 0.28);
+  background: rgba(34, 197, 94, 0.08);
+  padding: 10px 12px;
+  font-weight: 800;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -72,8 +142,19 @@
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
   }
 
+  .input {
+    border-color: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .input:focus {
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+  }
+
   .primary,
-  .secondary {
+  .secondary,
+  .tertiary {
     border-color: rgba(255, 255, 255, 0.12);
   }
 
@@ -82,7 +163,8 @@
     color: rgba(0, 0, 0, 0.92);
   }
 
-  .secondary:hover {
+  .secondary:hover,
+  .tertiary:hover {
     background: rgba(255, 255, 255, 0.08);
   }
 }

@@ -47,6 +47,13 @@
   opacity: 0.9;
 }
 
+.linkButton {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
 .link:hover {
   opacity: 1;
   background: rgba(0, 0, 0, 0.06);

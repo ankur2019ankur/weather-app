@@ -1,7 +1,60 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const links = useMemo(() => {
+    if (isLoggedIn) {
+      return [
+        { href: "/state", label: "State" },
+        { href: "/", label: "Dashboard" },
+      ];
+    }
+    return [
+      { href: "/login", label: "Login" },
+      { href: "/registration", label: "Registration" },
+    ];
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    const readAuth = () => {
+      try {
+        const token = localStorage.getItem("token");
+        setIsLoggedIn(Boolean(token && token.trim()));
+      } catch {
+        setIsLoggedIn(false);
+      }
+    };
+
+    readAuth();
+
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "token") readAuth();
+    };
+
+    window.addEventListener("storage", onStorage);
+    window.addEventListener("auth-changed", readAuth as EventListener);
+
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("auth-changed", readAuth as EventListener);
+    };
+  }, []);
+
+  const onLogout = () => {
+    try {
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+      localStorage.removeItem("password");
+    } finally {
+      window.dispatchEvent(new Event("auth-changed"));
+    }
+  };
+
   return (
     <header className={styles.header}>
       <nav className={styles.nav} aria-label="Primary">
@@ -12,21 +65,21 @@ export default function Navbar() {
         <div className={styles.spacer} />
 
         <ul className={styles.links}>
-          <li>
-            <Link href="/state" className={styles.link}>
-              State
-            </Link>
-          </li>
-          <li>
-            <Link href="/login" className={styles.link}>
-              Login
-            </Link>
-          </li>
-          <li>
-            <Link href="/registration" className={styles.link}>
-              Registration
-            </Link>
-          </li>
+          {links.map((l) => (
+            <li key={l.href}>
+              <Link href={l.href} className={styles.link}>
+                {l.label}
+              </Link>
+            </li>
+          ))}
+
+          {isLoggedIn ? (
+            <li>
+              <button type="button" className={`${styles.link} ${styles.linkButton}`} onClick={onLogout}>
+                Logout
+              </button>
+            </li>
+          ) : null}
         </ul>
       </nav>
     </header>
