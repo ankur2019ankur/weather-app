@@ -19,8 +19,10 @@ import { Bar, Doughnut, Line } from "react-chartjs-2";
 import InfrastructureAndNetwork from "./_components/infrastructure/infrastructure_and_network";
 import ActiveAlert from "./_components/active_alert/active_alert";
 import SecurityOperations from "./_components/security_operations/security_operations";
+import ApplicationAndNetwork from "./_components/application_and_network/application_and_neetwork";
 import Topbar from "./_components/dashboardNavbar/topbar";
 import BottomNavbar from "./_components/dashboardNavbar/bottomNavbar";
+import Sidebar, { type TabKey } from "./_components/dashboardNavbar/sidebar";
 
 ChartJS.register(
   ArcElement,
@@ -32,8 +34,6 @@ ChartJS.register(
   Tooltip,
   Filler,
 );
-
-type TabKey = "overview" | "security" | "appdb" | "infra" | "service";
 
 const HRS = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00"];
 
@@ -189,64 +189,7 @@ export default function DashboardPage() {
       <BottomNavbar tab={tab} setTab={setTab} />
 
       <div className={styles.layout}>
-        <aside className={styles.sidebar} aria-label="Sidebar navigation">
-          <div className={styles.sidebarSectionLabel}>Quick Jump</div>
-          <div
-            className={`${styles.sidebarItem} ${tab === "overview" ? styles.sidebarItemActive : ""}`}
-            onClick={() => setTab("overview")}
-            role="button"
-            tabIndex={0}
-          >
-            <div className={styles.sidebarItemLeft}>
-              <span className={`${styles.sDot} ${styles.sDotG}`} />
-              Overview
-            </div>
-          </div>
-          <div
-            className={`${styles.sidebarItem} ${tab === "security" ? styles.sidebarItemActive : ""}`}
-            onClick={() => setTab("security")}
-            role="button"
-            tabIndex={0}
-          >
-            <div className={styles.sidebarItemLeft}>
-              <span className={`${styles.sDot} ${styles.sDotY}`} />
-              Security Ops
-            </div>
-          </div>
-          <div
-            className={`${styles.sidebarItem} ${tab === "appdb" ? styles.sidebarItemActive : ""}`}
-            onClick={() => setTab("appdb")}
-            role="button"
-            tabIndex={0}
-          >
-            <div className={styles.sidebarItemLeft}>
-              <span className={`${styles.sDot} ${styles.sDotG}`} />
-              Application &amp; DB
-            </div>
-          </div>
-          <div
-            className={`${styles.sidebarItem} ${tab === "infra" ? styles.sidebarItemActive : ""}`}
-            onClick={() => setTab("infra")}
-            role="button"
-            tabIndex={0}
-          >
-            <div className={styles.sidebarItemLeft}>
-              <span className={`${styles.sDot} ${styles.sDotG}`} />
-              Infrastructure
-            </div>
-          </div>
-          <div
-            className={`${styles.sidebarItem} ${tab === "service" ? styles.sidebarItemActive : ""}`}
-            onClick={() => setTab("service")}
-            role="button"
-            tabIndex={0}
-          >
-            <div className={styles.sidebarItemLeft}>
-              <span className={`${styles.sDot} ${styles.sDotR}`} />
-              Service Mgmt
-            </div>
-          </div>
-        </aside>
+        <Sidebar tab={tab} setTab={setTab} />
 
         <section className={styles.main} aria-label="Dashboard main content">
           {tab === "overview" ? (
@@ -258,50 +201,11 @@ export default function DashboardPage() {
                 baseMiniLineOptions={baseMiniLineOptions}
               />
 
-              <div className={styles.gapSection}>
-                <div className={styles.secLabel}>Application &amp; Network</div>
-                <div className={styles.g2}>
-                  <article className={`${styles.card} ${styles.cardClickable}`} aria-label="APM widget">
-                    <div className={styles.cardTitle}>
-                      APM <span className={`${styles.badge} ${styles.badgeOk}`}>Healthy</span>
-                    </div>
-                    <div className={styles.cardSub}>Response time trend</div>
-                    <div className={styles.chartWrap} style={{ height: 90 }}>
-                      <Line data={datasets.overviewApm} options={baseMiniLineOptions} />
-                    </div>
-                    <div className={styles.rows}>
-                      <div className={styles.tr}>
-                        <span className={styles.tk}>Avg Response</span>
-                        <span className={styles.tv}>218ms</span>
-                      </div>
-                      <div className={styles.tr}>
-                        <span className={styles.tk}>Apdex</span>
-                        <span className={`${styles.tv} ${styles.tvG}`}>0.94</span>
-                      </div>
-                    </div>
-                  </article>
-
-                  <article className={`${styles.card} ${styles.cardClickable}`} aria-label="WAN widget">
-                    <div className={styles.cardTitle}>
-                      WAN <span className={`${styles.badge} ${styles.badgeWarn}`}>Degraded</span>
-                    </div>
-                    <div className={styles.cardSub}>Links available</div>
-                    <div className={styles.chartWrap} style={{ height: 90 }}>
-                      <Line data={datasets.overviewWan} options={baseMiniLineOptions} />
-                    </div>
-                    <div className={styles.rows}>
-                      <div className={styles.tr}>
-                        <span className={styles.tk}>Remote links</span>
-                        <span className={`${styles.tv} ${styles.tvY}`}>1,204 / 1,218</span>
-                      </div>
-                      <div className={styles.tr}>
-                        <span className={styles.tk}>Links down</span>
-                        <span className={`${styles.tv} ${styles.tvR}`}>14</span>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-              </div>
+              <ApplicationAndNetwork
+                styles={styles}
+                datasets={datasets}
+                baseMiniLineOptions={baseMiniLineOptions}
+              />
 
               <InfrastructureAndNetwork datasets={datasets} baseMiniLineOptions={baseMiniLineOptions} />
 
