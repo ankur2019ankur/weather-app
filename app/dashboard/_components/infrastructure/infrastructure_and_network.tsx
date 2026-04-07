@@ -3,7 +3,7 @@
 import type { ChartData, ChartOptions } from "chart.js";
 import { Line } from "react-chartjs-2";
 
-import dashboardStyles from "../dashboard.module.css";
+import dashboardStyles from "../../dashboard.module.css";
 import styles from "./infrastructure_and_network.module.css";
 
 type MiniLineData = ChartData<"line", (number | null)[], unknown>;
