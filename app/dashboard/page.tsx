@@ -12,8 +12,10 @@ import {
   LineElement,
   PointElement,
   Tooltip,
+  Legend,
   Filler,
 } from "chart.js";
+import type { TooltipItem } from "chart.js";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
 
 import InfrastructureAndNetwork from "./_components/infrastructure/infrastructure_and_network";
@@ -32,6 +34,7 @@ ChartJS.register(
   LineElement,
   PointElement,
   Tooltip,
+  Legend,
   Filler,
 );
 
@@ -74,6 +77,62 @@ const baseMiniBarOptions = {
   animation: { duration: 600 },
 } as const;
 
+/** Sample daily low / high (°C) for five metros — illustrative dashboard data. */
+const CITY_DAILY_TEMPS = [
+  { city: "Mumbai", low: 26, high: 33 },
+  { city: "Delhi", low: 22, high: 39 },
+  { city: "Bengaluru", low: 18, high: 28 },
+  { city: "Chennai", low: 27, high: 35 },
+  { city: "Kolkata", low: 25, high: 36 },
+] as const;
+
+const temperatureBarOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      display: true,
+      position: "top" as const,
+      align: "end" as const,
+      labels: {
+        boxWidth: 10,
+        padding: 8,
+        color: "#8b949e",
+        font: { size: 10 },
+      },
+    },
+    tooltip: {
+      ...baseMiniLineOptions.plugins.tooltip,
+      callbacks: {
+        label(ctx: TooltipItem<"bar">) {
+          const v = ctx.parsed.y;
+          if (v == null || Number.isNaN(v)) return String(ctx.dataset.label ?? "");
+          return `${ctx.dataset.label}: ${v}°C`;
+        },
+      },
+    },
+  },
+  scales: {
+    x: {
+      display: true,
+      grid: { display: false },
+      ticks: { color: "#8b949e", font: { size: 9 } },
+    },
+    y: {
+      display: true,
+      suggestedMin: 12,
+      suggestedMax: 42,
+      grid: { color: "rgba(255,255,255,0.06)" },
+      ticks: {
+        color: "#8b949e",
+        font: { size: 9 },
+        callback: (value: string | number) => `${value}°`,
+      },
+    },
+  },
+  animation: { duration: 600 },
+} as const;
+
 type AlertKind = "critical" | "warning";
 
 export default function DashboardPage() {
@@ -96,11 +155,19 @@ export default function DashboardPage() {
 
   const datasets = useMemo(() => {
     const overviewSoc = {
-      labels: HRS,
+      labels: CITY_DAILY_TEMPS.map((c) => c.city),
       datasets: [
         {
-          data: [120, 180, 247, 310, 260, 200, 247],
-          backgroundColor: "rgba(56,139,253,0.6)",
+          label: "Low (°C)",
+          data: CITY_DAILY_TEMPS.map((c) => c.low),
+          backgroundColor: "rgba(56,139,253,0.75)",
+          borderRadius: 3,
+          borderSkipped: false as const,
+        },
+        {
+          label: "High (°C)",
+          data: CITY_DAILY_TEMPS.map((c) => c.high),
+          backgroundColor: "rgba(248,81,73,0.7)",
           borderRadius: 3,
           borderSkipped: false as const,
         },
@@ -221,6 +288,7 @@ export default function DashboardPage() {
                 styles={styles}
                 datasets={datasets}
                 baseMiniBarOptions={baseMiniBarOptions}
+                temperatureBarOptions={temperatureBarOptions}
                 baseMiniLineOptions={baseMiniLineOptions}
               />
 

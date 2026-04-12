@@ -41,9 +41,11 @@ const windSpeedBarFillClasses = [
 export default function InfrastructureAndNetwork(props: {
   datasets: { overviewWan: MiniLineData; dewWindPoints: MiniLineData };
   baseMiniLineOptions: MiniLineOptions;
+  /** Relative column widths for Wind vs Dew (e.g. `[2, 1]` → first column twice as wide). */
+  widgetColumnRatio?: readonly [number, number];
 }) {
-  const { datasets, baseMiniLineOptions } = props;
-  console.log("datasets========", datasets.overviewWan);
+  const { datasets, baseMiniLineOptions, widgetColumnRatio = [1, 1] } = props;
+  const [windFr, dewFr] = widgetColumnRatio;
   const dominantWind = windSpeedData.reduce((best, row) =>
     row.percentage > best.percentage ? row : best
   );
@@ -51,7 +53,10 @@ export default function InfrastructureAndNetwork(props: {
   return (
     <div className={dashboardStyles.gapSection}>
       <div className={dashboardStyles.secLabel}>Wind &amp; Cloud Monitoring</div>
-      <div className={dashboardStyles.g2}>
+      <div
+        className={dashboardStyles.g2Ratio}
+        style={{ gridTemplateColumns: `${windFr}fr ${dewFr}fr` }}
+      >
         <article
           className={`${dashboardStyles.card} ${dashboardStyles.cardClickable}`}
           aria-label="Wind Speed widget"

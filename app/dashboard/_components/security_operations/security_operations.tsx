@@ -6,42 +6,53 @@ type SecurityOperationsProps = {
   styles: Record<string, string>;
   datasets: any;
   baseMiniBarOptions: any;
+  /** Grouped bar chart: city lows vs highs with visible axes. */
+  temperatureBarOptions: any;
   baseMiniLineOptions: any;
+  /** Relative column widths for SOC vs SIEM (e.g. `[3, 2]`). */
+  widgetColumnRatio?: readonly [number, number];
 };
 
 export default function SecurityOperations({
   styles,
   datasets,
   baseMiniBarOptions,
-  baseMiniLineOptions,
+  temperatureBarOptions,
+  widgetColumnRatio = [1, 1],
 }: SecurityOperationsProps) {
+  const [socFr, siemFr] = widgetColumnRatio;
   return (
     <div className={styles.gapSection}>
-      <div className={styles.secLabel}>Security Operations</div>
-      <div className={styles.g3}>
+      <div className={styles.secLabel}>
+        temperature and humidity monitoring
+      </div>
+      <div
+        className={styles.g2Ratio}
+        style={{ gridTemplateColumns: `${socFr}fr ${siemFr}fr` }}
+      >
         <article className={`${styles.card} ${styles.cardClickable}`} aria-label="SOC widget">
           <div className={styles.cardTitle}>
-            SOC PITG <span className={`${styles.badge} ${styles.badgeOk}`}>Nominal</span>
+            Temperature (Highest and Lowest) <span className={`${styles.badge} ${styles.badgeOk}`}>Nominal</span>
           </div>
-          <div className={styles.cardSub}>Real-time events</div>
-          <div className={styles.chartWrap} style={{ height: 64 }}>
-            <Bar data={datasets.overviewSoc} options={baseMiniBarOptions} />
+          <div className={styles.cardSub}>Sample daily range (°C) across metros</div>
+          <div className={styles.chartWrap} style={{ height: 168 }}>
+            <Bar data={datasets.overviewSoc} options={temperatureBarOptions} />
           </div>
           <div className={styles.rows}>
             <div className={styles.tr}>
-              <span className={styles.tk}>Events/hr</span>
-              <span className={styles.tv}>247</span>
+              <span className={styles.tk}>Cities</span>
+              <span className={styles.tv}>5</span>
             </div>
             <div className={styles.tr}>
-              <span className={styles.tk}>Blocked</span>
-              <span className={`${styles.tv} ${styles.tvG}`}>1,082</span>
+              <span className={styles.tk}>Peak today</span>
+              <span className={`${styles.tv} ${styles.tvG}`}>Delhi 39°C</span>
             </div>
           </div>
         </article>
 
         <article className={`${styles.card} ${styles.cardClickable}`} aria-label="SIEM widget">
           <div className={styles.cardTitle}>
-            SIEM <span className={`${styles.badge} ${styles.badgeWarn}`}>Reviewing</span>
+            Humidity <span className={`${styles.badge} ${styles.badgeWarn}`}>Reviewing</span>
           </div>
           <div className={styles.cardSub}>Security correlation</div>
           <div className={styles.chartWrap} style={{ height: 64 }}>
@@ -59,36 +70,6 @@ export default function SecurityOperations({
           </div>
         </article>
 
-        <article className={`${styles.card} ${styles.cardClickable}`} aria-label="VM widget">
-          <div className={styles.cardTitle}>
-            VM / Compute <span className={`${styles.badge} ${styles.badgeOk}`}>Running</span>
-          </div>
-          <div className={styles.cardSub}>Fleet composition</div>
-          <div className={styles.chartWrap} style={{ height: 110 }}>
-            <Doughnut
-              data={datasets.vmMix}
-              options={{
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: { display: true, position: "right", labels: { color: "#8b949e" } },
-                  tooltip: baseMiniLineOptions.plugins.tooltip,
-                },
-                cutout: "68%",
-              }}
-            />
-          </div>
-          <div className={styles.rows}>
-            <div className={styles.tr}>
-              <span className={styles.tk}>Running</span>
-              <span className={`${styles.tv} ${styles.tvG}`}>336</span>
-            </div>
-            <div className={styles.tr}>
-              <span className={styles.tk}>Stopped</span>
-              <span className={`${styles.tv} ${styles.tvY}`}>3</span>
-            </div>
-          </div>
-        </article>
       </div>
     </div>
   );

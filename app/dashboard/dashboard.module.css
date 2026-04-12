@@ -338,6 +338,13 @@
   gap: 10px;
 }
 
+/* Two widgets with configurable relative widths via inline gridTemplateColumns on the element. */
+.g2Ratio {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
 .g3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -604,8 +611,9 @@
     display: none;
   }
   .g2,
-  .g3 {
-    grid-template-columns: 1fr;
+  .g3,
+  .g2Ratio {
+    grid-template-columns: 1fr !important;
   }
   .kpiBar {
     grid-template-columns: repeat(3, minmax(0, 1fr));
