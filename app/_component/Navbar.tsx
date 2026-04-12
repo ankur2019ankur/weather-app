@@ -11,7 +11,7 @@ export default function Navbar() {
     if (isLoggedIn) {
       return [
         { href: "/state", label: "State" },
-        { href: "/", label: "Dashboard" },
+        { href: "/dashboard", label: "Dashboard" },
       ];
     }
     return [

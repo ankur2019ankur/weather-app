@@ -143,6 +143,29 @@ export default function DashboardPage() {
         },
       ],
     };
+    /** Dew point (°C) + wind speed (km/h) mini sparklines — same hourly labels as WAN/APm. */
+    const dewWindPoints = {
+      labels: HRS,
+      datasets: [
+        {
+          label: "Dew point (°C)",
+          data: [6, 8, 10, 12, 11, 9, 8],
+          borderColor: "#58a6ff",
+          borderWidth: 1.5,
+          tension: 0.35,
+          fill: true,
+          backgroundColor: "rgba(88,166,255,0.12)",
+        },
+        {
+          label: "Wind (km/h)",
+          data: [8, 12, 18, 22, 20, 14, 10],
+          borderColor: "#a371f7",
+          borderWidth: 1.5,
+          tension: 0.35,
+          fill: false,
+        },
+      ],
+    };
     const vmMix = {
       labels: ["Running", "Stopped", "Error"],
       datasets: [
@@ -154,7 +177,7 @@ export default function DashboardPage() {
       ],
     };
 
-    return { overviewSoc, overviewSiem, overviewApm, overviewWan, vmMix };
+    return { overviewSoc, overviewSiem, overviewApm, overviewWan, dewWindPoints, vmMix };
   }, []);
 
   const activeAlerts = useMemo(
@@ -162,20 +185,20 @@ export default function DashboardPage() {
       [
         {
           kind: "critical" as const,
-          title: "Database latency spike detected",
-          detail: "ClickHouse query time >2s · Affecting 14 slow queries · DB team notified",
+          title: "Rain / Heavy Rain Alert",
+          detail: "Heavy rainfall expected in the next 24 hours. Avoid low-lying areas and stay indoors.",
           time: "14:28 IST",
         },
         {
           kind: "critical" as const,
-          title: "2 remote WAN links down",
-          detail: "Escalated to DOP NI L2 · Locations: Dehradun, Srinagar",
+          title: "Storm / Thunderstorm Alert",
+          detail: "Storm / Thunderstorm expected in the next 24 hours. Avoid low-lying areas and stay indoors.",
           time: "13:51 IST",
         },
         {
           kind: "warning" as const,
-          title: "NGC DC storage utilization at 78%",
-          detail: "Threshold approaching 80% · Capacity review scheduled",
+          title: "Heatwave Alert",
+          detail: "Heatwave expected in the next 24 hours. Avoid outdoor activities and stay indoors.",
           time: "12:14 IST",
         },
       ] satisfies Array<{ kind: AlertKind; title: string; detail: string; time: string }>,
@@ -198,12 +221,6 @@ export default function DashboardPage() {
                 styles={styles}
                 datasets={datasets}
                 baseMiniBarOptions={baseMiniBarOptions}
-                baseMiniLineOptions={baseMiniLineOptions}
-              />
-
-              <ApplicationAndNetwork
-                styles={styles}
-                datasets={datasets}
                 baseMiniLineOptions={baseMiniLineOptions}
               />
 

@@ -23,36 +23,7 @@ export default function BottomNavbar({ tab, setTab }: BottomNavbarProps) {
           <span className={styles.navDot} style={{ background: "var(--blue)" }} />
           Overview
         </button>
-        <button
-          type="button"
-          className={`${styles.navTab} ${tab === "security" ? styles.navTabActive : ""}`}
-          onClick={() => setTab("security")}
-          role="tab"
-          aria-selected={tab === "security"}
-        >
-          <span className={styles.navDot} style={{ background: "var(--amber)" }} />
-          Security Ops
-        </button>
-        <button
-          type="button"
-          className={`${styles.navTab} ${tab === "appdb" ? styles.navTabActive : ""}`}
-          onClick={() => setTab("appdb")}
-          role="tab"
-          aria-selected={tab === "appdb"}
-        >
-          <span className={styles.navDot} style={{ background: "var(--teal)" }} />
-          Application &amp; DB
-        </button>
-        <button
-          type="button"
-          className={`${styles.navTab} ${tab === "infra" ? styles.navTabActive : ""}`}
-          onClick={() => setTab("infra")}
-          role="tab"
-          aria-selected={tab === "infra"}
-        >
-          <span className={styles.navDot} style={{ background: "var(--green)" }} />
-          Infrastructure &amp; NW
-        </button>
+        
         <button
           type="button"
           className={`${styles.navTab} ${tab === "service" ? styles.navTabActive : ""}`}
