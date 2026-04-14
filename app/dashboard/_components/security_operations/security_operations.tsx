@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import type { ChartData, ChartOptions, TooltipItem } from "chart.js";
-import { Bar } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
 
 const OPEN_METEO_FORECAST = "https://api.open-meteo.com/v1/forecast";
 const SAMPLE_EVERY_H = 4;
@@ -125,6 +125,53 @@ const humidityBarOptions: ChartOptions<"bar"> = {
   animation: { duration: 600 },
 };
 
+const humidityPieSliceColors = [
+  "rgba(210,153,34,0.88)",
+  "rgba(249,115,22,0.88)",
+  "rgba(234,179,8,0.88)",
+  "rgba(132,204,22,0.88)",
+  "rgba(34,197,94,0.88)",
+  "rgba(56,189,248,0.88)",
+  "rgba(99,102,241,0.88)",
+  "rgba(168,85,247,0.88)",
+];
+
+const humidityPieOptions: ChartOptions<"pie"> = {
+  responsive: true,
+  maintainAspectRatio: false,
+  layout: { padding: { top: 4, bottom: 4, left: 4, right: 4 } },
+  plugins: {
+    legend: {
+      display: true,
+      position: "bottom",
+      labels: {
+        color: "#8b949e",
+        boxWidth: 8,
+        font: { size: 8 },
+        padding: 4,
+      },
+    },
+    tooltip: {
+      enabled: true,
+      backgroundColor: "#161b22",
+      borderColor: "rgba(255,255,255,0.12)",
+      borderWidth: 1,
+      titleColor: "#e6edf3",
+      bodyColor: "#8b949e",
+      padding: 8,
+      callbacks: {
+        label(ctx: TooltipItem<"pie">) {
+          const raw = ctx.raw;
+          const v = typeof raw === "number" ? raw : Number(raw);
+          if (Number.isNaN(v)) return "";
+          return ` ${v}% RH`;
+        },
+      },
+    },
+  },
+  animation: { duration: 600 },
+};
+
 const weatherBarOptions: ChartOptions<"bar"> = {
   responsive: true,
   maintainAspectRatio: false,
@@ -187,6 +234,7 @@ export default function SecurityOperations({
     "idle" | "loading" | "ok" | "error"
   >("idle");
   const [humidityChart, setHumidityChart] = useState<ChartData<"bar"> | null>(null);
+  const [humidityPieChart, setHumidityPieChart] = useState<ChartData<"pie"> | null>(null);
   const [humiditySummary, setHumiditySummary] = useState<{
     peak: number;
     low: number;
@@ -303,6 +351,7 @@ export default function SecurityOperations({
         if (!hourly?.time?.length || !hourly.relative_humidity_2m?.length) {
           setHumidityState("error");
           setHumidityChart(null);
+          setHumidityPieChart(null);
           setHumiditySummary(null);
           return;
         }
@@ -310,6 +359,7 @@ export default function SecurityOperations({
         if (!values.length) {
           setHumidityState("error");
           setHumidityChart(null);
+          setHumidityPieChart(null);
           setHumiditySummary(null);
           return;
         }
@@ -325,6 +375,20 @@ export default function SecurityOperations({
             },
           ],
         });
+        setHumidityPieChart({
+          labels,
+          datasets: [
+            {
+              label: "Relative humidity",
+              data: values,
+              backgroundColor: values.map(
+                (_, i) => humidityPieSliceColors[i % humidityPieSliceColors.length],
+              ),
+              borderColor: "rgba(13,17,23,0.95)",
+              borderWidth: 1,
+            },
+          ],
+        });
         setHumiditySummary({
           peak: Math.max(...values),
           low: Math.min(...values),
@@ -334,6 +398,7 @@ export default function SecurityOperations({
         if (!cancelled) {
           setHumidityState("error");
           setHumidityChart(null);
+          setHumidityPieChart(null);
           setHumiditySummary(null);
         }
       }
@@ -439,7 +504,26 @@ export default function SecurityOperations({
               </div>
             )}
           </div>
-          
+          <div className={styles.chartWrap} style={{ height: 152, marginTop: 8 }}>
+            {humidityPieChart ? (
+              <Pie data={humidityPieChart} options={humidityPieOptions} />
+            ) : (
+              <div
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#8b949e",
+                  fontSize: 12,
+                }}
+              >
+                {humidityState === "error"
+                  ? "Could not load humidity."
+                  : "Loading humidity…"}
+              </div>
+            )}
+          </div>
         </article>
 
       </div>

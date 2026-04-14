@@ -268,7 +268,7 @@ export default function DashboardPage() {
                 temperatureBarOptions={temperatureBarOptions}
               />
 
-              <InfrastructureAndNetwork datasets={datasets} baseMiniLineOptions={baseMiniLineOptions} />
+              {/* <InfrastructureAndNetwork datasets={datasets} baseMiniLineOptions={baseMiniLineOptions} /> */}
 
               <ActiveAlert activeAlerts={activeAlerts} />
             </>
