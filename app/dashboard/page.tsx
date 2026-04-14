@@ -16,12 +16,9 @@ import {
   Filler,
 } from "chart.js";
 import type { TooltipItem } from "chart.js";
-import { Bar, Doughnut, Line } from "react-chartjs-2";
-
 import InfrastructureAndNetwork from "./_components/infrastructure/infrastructure_and_network";
 import ActiveAlert from "./_components/active_alert/active_alert";
 import SecurityOperations from "./_components/security_operations/security_operations";
-import ApplicationAndNetwork from "./_components/application_and_network/application_and_neetwork";
 import Topbar from "./_components/dashboardNavbar/topbar";
 import BottomNavbar from "./_components/dashboardNavbar/bottomNavbar";
 import Sidebar, { type TabKey } from "./_components/dashboardNavbar/sidebar";
@@ -66,14 +63,6 @@ const baseMiniLineOptions = {
   },
   scales: { x: { display: false }, y: { display: false } },
   elements: { point: { radius: 0 } },
-  animation: { duration: 600 },
-} as const;
-
-const baseMiniBarOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: baseMiniLineOptions.plugins,
-  scales: { x: { display: false }, y: { display: false } },
   animation: { duration: 600 },
 } as const;
 
@@ -173,17 +162,6 @@ export default function DashboardPage() {
         },
       ],
     };
-    const overviewSiem = {
-      labels: HRS,
-      datasets: [
-        {
-          data: [200, 320, 410, 380, 290, 340, 280],
-          backgroundColor: "rgba(210,153,34,0.6)",
-          borderRadius: 3,
-          borderSkipped: false as const,
-        },
-      ],
-    };
     const overviewApm = {
       labels: HRS,
       datasets: [
@@ -244,7 +222,7 @@ export default function DashboardPage() {
       ],
     };
 
-    return { overviewSoc, overviewSiem, overviewApm, overviewWan, dewWindPoints, vmMix };
+    return { overviewSoc, overviewApm, overviewWan, dewWindPoints, vmMix };
   }, []);
 
   const activeAlerts = useMemo(
@@ -287,9 +265,7 @@ export default function DashboardPage() {
               <SecurityOperations
                 styles={styles}
                 datasets={datasets}
-                baseMiniBarOptions={baseMiniBarOptions}
                 temperatureBarOptions={temperatureBarOptions}
-                baseMiniLineOptions={baseMiniLineOptions}
               />
 
               <InfrastructureAndNetwork datasets={datasets} baseMiniLineOptions={baseMiniLineOptions} />
