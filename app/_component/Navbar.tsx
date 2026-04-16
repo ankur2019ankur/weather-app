@@ -10,13 +10,11 @@ export default function Navbar() {
   const links = useMemo(() => {
     if (isLoggedIn) {
       return [
-        { href: "/state", label: "State" },
         { href: "/dashboard", label: "Dashboard" },
       ];
     }
     return [
-      { href: "/login", label: "Login" },
-      { href: "/registration", label: "Registration" },
+      { href: "/", label: "Login" },
     ];
   }, [isLoggedIn]);
 
@@ -59,7 +57,7 @@ export default function Navbar() {
     <header className={styles.header}>
       <nav className={styles.nav} aria-label="Primary">
         <Link href="/" className={styles.brand}>
-          Weather App
+          Privileged Access Manager
         </Link>
 
         <div className={styles.spacer} />

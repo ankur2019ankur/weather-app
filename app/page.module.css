@@ -81,6 +81,11 @@
   gap: 14px;
 }
 
+.gridCenter {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+
 .srOnly {
   position: absolute;
   width: 1px;

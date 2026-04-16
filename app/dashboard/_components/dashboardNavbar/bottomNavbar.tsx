@@ -12,29 +12,6 @@ type BottomNavbarProps = {
 export default function BottomNavbar({ tab, setTab }: BottomNavbarProps) {
   return (
     <>
-      <div className={styles.nav} role="tablist" aria-label="Dashboard tabs">
-        <button
-          type="button"
-          className={`${styles.navTab} ${tab === "overview" ? styles.navTabActive : ""}`}
-          onClick={() => setTab("overview")}
-          role="tab"
-          aria-selected={tab === "overview"}
-        >
-          <span className={styles.navDot} style={{ background: "var(--blue)" }} />
-          Overview
-        </button>
-        
-        <button
-          type="button"
-          className={`${styles.navTab} ${tab === "service" ? styles.navTabActive : ""}`}
-          onClick={() => setTab("service")}
-          role="tab"
-          aria-selected={tab === "service"}
-        >
-          <span className={styles.navDot} style={{ background: "var(--red)" }} />
-          Service Management
-        </button>
-      </div>
 
       <div className={styles.kpiBar} aria-label="Key performance indicators">
         <div className={styles.kpiCard}>

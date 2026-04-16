@@ -2,18 +2,13 @@
 
 import styles from "../../dashboard.module.css";
 import { useMemo } from "react";
+import Clock from "@/app/_component/Clock";
 
 type TopbarProps = {
   now: Date;
 };
 
-export default function Topbar({ now }: TopbarProps) {
-  const clockText = useMemo(() => {
-    const h = String(now.getHours()).padStart(2, "0");
-    const m = String(now.getMinutes()).padStart(2, "0");
-    const s = String(now.getSeconds()).padStart(2, "0");
-    return `${h}:${m}:${s} IST`;
-  }, [now]);
+export default function Topbar() {
 
   return (
     <div className={styles.topbar}>
@@ -29,7 +24,7 @@ export default function Topbar({ now }: TopbarProps) {
           <span className={styles.liveDot} />
           Live
         </div>
-        <div className={styles.clock}>{clockText}</div>
+        <div className={styles.clock}><Clock /></div>
       </div>
     </div>
   );

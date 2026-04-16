@@ -245,7 +245,7 @@ export default function DashboardPage() {
 
   return (
     <div className={styles.shell}>
-      <Topbar now={now} />
+      <Topbar />
 
       <BottomNavbar tab={tab} setTab={setTab} />
 
@@ -292,9 +292,8 @@ export default function DashboardPage() {
       </div>
 
       <footer className={styles.footer}>
-        <span>Weather Dashboard v1</span>
+        <span>Privileged Access Manager</span>
         <span>{refreshText}</span>
-        <span>Data source: OpenWeatherMap API</span>
       </footer>
     </div>
   );
