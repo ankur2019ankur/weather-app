@@ -128,13 +128,6 @@ export default function DashboardPage() {
   const now = useClock();
   const [tab, setTab] = useState<TabKey>("overview");
 
-  const clockText = useMemo(() => {
-    const h = String(now.getHours()).padStart(2, "0");
-    const m = String(now.getMinutes()).padStart(2, "0");
-    const s = String(now.getSeconds()).padStart(2, "0");
-    return `${h}:${m}:${s} IST`;
-  }, [now]);
-
   const refreshText = useMemo(() => {
     const h = String(now.getHours()).padStart(2, "0");
     const m = String(now.getMinutes()).padStart(2, "0");
@@ -252,7 +245,7 @@ export default function DashboardPage() {
 
   return (
     <div className={styles.shell}>
-      <Topbar clockText={clockText} />
+      <Topbar now={now} />
 
       <BottomNavbar tab={tab} setTab={setTab} />
 
