@@ -1,0 +1,14 @@
+/* Keep this module focused on section-specific tweaks.
+   Shared layout/card styles stay in dashboard.module.css. */
+
+.progTop {
+  margin-top: 8px;
+}
+
+.wanChart {
+  height: 80px;
+}
+
+.firstRowTight {
+  margin-top: 8px;
+}
