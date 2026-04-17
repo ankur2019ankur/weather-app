@@ -19,7 +19,7 @@ type ResourcesApiResponse = {
   Vault: ResourceItem[];
 };
 
-const API_URL = "http://localhost:3009/api/resources";
+const API_URL = "http://localhost:3000/api/resources";
 const API_COOKIE = process.env.NEXT_PUBLIC_RESOURCES_API_COOKIE;
 console.log(API_COOKIE);
 
