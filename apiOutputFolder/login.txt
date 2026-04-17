@@ -1,0 +1,78 @@
+{
+    "vrm": "4.6.0",
+    "message": "User admin@pam02.pitg.site(192.168.1.135) successfully authenticated",
+    "status": 0,
+    "svc": "pam02.pitg.site",
+    "User": {
+        "name": "admin",
+        "spf_auth_type": 100,
+        "ACT_LAST_SUCC_LOGON": {
+            "value": 1776431143
+        }
+    },
+    "Identity": {
+        "content": "eJzj8ExJzSvJLKlkyOd0LC3JCMnPTs1jKGbJS8xNZU1Myc3MK+YoAYnFZ6YwFPNBmGWJpTklIIFM3uKCtPhEoL74ksqC1JRMjsy8xOSSzLLUPg5PtpLiksTcgrbzHY/SirmLUnPzS1LjM/KLS3gNLY30DM0s9Az1DI1NizkLUlOLwBL8BYm5BkZ6BZkl6XrFmSWp+SyhxalFKK5BtzGf29E5JN7Z39fX1S+EoZi1LDGnNFXMEay0uKQosSQzP0/BMTk5vzSvhCGfKyDcJd7XMcLR3ZUhCaKWgSFfAGREqF9osKtLvI+nr2cIkpwgkpyLq49rCLJGfpCkj7+zt39oSLxfqC9DJlwK4qwgV8cQVxcGT4hw29ljn2yAjgBJBTgGB4e7wBxsHOzhaGRqpqwfHp6X4e9oEmQa7J5f4uVSVZzuUqEdUFUWkOWVn+wdlOORbRGe6xmVE+ZoC7QD5BvXiADPIKAdCFfxgIR9HIOB9nu4I9n9WQGqxcMzOMQ/KJIhH6olnyzrgSBfGBwAIKuCQ52dgUHh7u8Ht/F8xwN1hnwOkBJfx4BguHUgjcwBzi4MVUzJJQpz8oX2Wxu5JczdK3F8AdPUDdX9O96f6ZRnS6w6ZGruujiqiimzTMBf4WO+067bWRwr62LVb8xuK+ZOzizIAKYaUBrgTkwt1gU6Xzc5KTmfKTUbaG5misjHzRar92rvibX4oFw74RMvS+GJzxVVQNkmBumPZ6Z1HImbJjDT85GXosly8RvySziC1W+miue/ljSbuDL+petrlaLlJY7hKdme335/mXHJ7dyqLceDqwWPFC2qvvbVZfdXUfdpM45YO4mFlGyISF6yvHjj7dc6WmZbXnSdqrlSJ29o8XpG15TEqTN61e33/Xok5aN8JL6ge/LMuI4/y8UOWAs/Wvni0rfc/WoZc/99S44Iro50X1FY+G/mFvET1TsFHA73Pn3hOiWj5NdfzZhm4W922zpP/Oa7pb1HNje7//SZzfb+5dNyFiZxXaoykOR8sa8gPyik+PDd2NrWxpfXl8kr2u25FH2S93XFxOddFdJrNnXMV53AV61xWVD8UbrCro5TDtWR7QwMiSxB+TmpwHxVBKQYtVD5kHwGjCPO4Mz0vMSS0qJUhirm4sz0JgZ3jYiXPSbFO1nsHhSEGvYYPpS4FWrKoPfHRa2s6En1w/05Mek27wKNvzZ5LX3TdJytOtmKvW5T9LmlT9ecPM67VCn30Oe648ZvDuotff+nlWWufOWi8DXNIgpS3zZ4J1rLrcg0VbNgXsvRvv+EW0jmlq0dl4t2Nm77uUVde3PI/2LdrNicmx/fuO6fo36Hm3Vy+M/WxP9aEsyRZtyH+87VTF3vWqlkEGt9WuCL+K1tT9TT38p/NJjy4ntk0tFf5iff6bL/cw2dPv2v67vLaa9UDMu3nmfW1DldIj9XrfrX11M3dXc4+/8UuNhUoyMY6judyez464dGjs6HRAXNp2zU2u2SW5ZtoeiuctXrUCZnRmIxpOBxACeyWIs2XVl+7s6EF5EGa9MsmM0ipixlYAAAw1kYdQ=="
+    },
+    "AuthToken": {
+        "name": "admin",
+        "token_id": null,
+        "token_vault_id": null,
+        "spf_auth_type": 100,
+        "inactive": 1800,
+        "tstamp": 1776431462,
+        "remote_host": "192.168.1.135",
+        "peer_host": "pam02.pitg.site",
+        "User": {
+            "name": "admin",
+            "spf_auth_type": 100,
+            "ACT_COMMENT": {
+                "value": "Administration Account"
+            },
+            "PWD_MAXAGE": {
+                "value": false
+            },
+            "ACT_UNUSED_LIMIT": {
+                "value": false
+            },
+            "ACT_UNUSED_DELETE": {
+                "value": false
+            },
+            "ACT_LOCKOUT_NUM": {
+                "value": 0
+            },
+            "ACT_CREATED": {
+                "value": 1773254972
+            },
+            "ACT_PASSWD": {
+                "value": "SHA256#/WWnhOA4R5SGotJDzsgDx+PzvPjJocKRlHk8WmIZlVA="
+            },
+            "PWD_EXPIRED": {
+                "value": false
+            },
+            "PWD_LAST_CHG": {
+                "value": 1773255072
+            },
+            "PWD_HISTORY": {
+                "value": {
+                    "SHA256#/WWnhOA4R5SGotJDzsgDx+PzvPjJocKRlHk8WmIZlVA=": {}
+                }
+            },
+            "ACT_LAST_SUCC_LOGON": {
+                "value": 1776431143
+            },
+            "ACT_MAPS": {
+                "value": {}
+            }
+        },
+        "Role": [
+            {
+                "role": "*"
+            },
+            {
+                "role": "admin"
+            }
+        ]
+    }
+}
+
+
