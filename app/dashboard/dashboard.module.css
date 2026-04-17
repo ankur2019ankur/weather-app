@@ -2,28 +2,28 @@
 }
 
 .shell {
-  --bg0: #0d1117;
-  --bg1: #161b22;
-  --bg2: #1c2333;
-  --bg3: #21262d;
-  --bg4: #2d333b;
-  --border: rgba(255, 255, 255, 0.08);
-  --border2: rgba(255, 255, 255, 0.14);
-  --text0: #e6edf3;
-  --text1: #8b949e;
-  --text2: #6e7681;
+  --bg0: #eef3fa;
+  --bg1: #f8fbff;
+  --bg2: #e9f0f9;
+  --bg3: #dce5f1;
+  --bg4: #cfd9e8;
+  --border: rgba(15, 23, 42, 0.12);
+  --border2: rgba(15, 23, 42, 0.22);
+  --text0: #0f172a;
+  --text1: #334155;
+  --text2: #64748b;
   --blue: #388bfd;
-  --blue-bg: rgba(56, 139, 253, 0.12);
-  --blue-text: #79c0ff;
+  --blue-bg: rgba(56, 139, 253, 0.16);
+  --blue-text: #1d4ed8;
   --green: #3fb950;
-  --green-bg: rgba(63, 185, 80, 0.12);
-  --green-text: #56d364;
+  --green-bg: rgba(63, 185, 80, 0.16);
+  --green-text: #15803d;
   --amber: #d29922;
-  --amber-bg: rgba(210, 153, 34, 0.12);
-  --amber-text: #e3b341;
+  --amber-bg: rgba(210, 153, 34, 0.16);
+  --amber-text: #a16207;
   --red: #f85149;
-  --red-bg: rgba(248, 81, 73, 0.12);
-  --red-text: #ff7b72;
+  --red-bg: rgba(248, 81, 73, 0.16);
+  --red-text: #dc2626;
   --teal: #39c5cf;
   --teal-bg: rgba(57, 197, 207, 0.12);
   --accent: #58a6ff;
@@ -533,7 +533,7 @@
 
 .alertItem:hover {
   border-color: var(--border2);
-  background: rgba(28, 35, 51, 0.8);
+  background: #dde7f4;
 }
 
 .alertIcon {
