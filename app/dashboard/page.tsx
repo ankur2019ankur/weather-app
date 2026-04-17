@@ -22,6 +22,7 @@ import SecurityOperations from "./_components/security_operations/security_opera
 import Topbar from "./_components/dashboardNavbar/topbar";
 import BottomNavbar from "./_components/dashboardNavbar/bottomNavbar";
 import Sidebar, { type TabKey } from "./_components/dashboardNavbar/sidebar";
+import ResourcesPage from "./resources/page";
 
 ChartJS.register(
   ArcElement,
@@ -265,13 +266,12 @@ export default function DashboardPage() {
 
               <ActiveAlert activeAlerts={activeAlerts} />
             </>
+          ) : tab === "resources" ? (
+            <ResourcesPage />
           ) : (
             <div className={styles.card} aria-label="Tab placeholder">
               <div className={styles.cardTitle}>
-                {tab === "resources"
-                  ? "Resources"
-                  : "Overview"}{" "}
-                <span className={`${styles.badge} ${styles.badgeWarn}`}>Coming soon</span>
+                Overview <span className={`${styles.badge} ${styles.badgeWarn}`}>Coming soon</span>
               </div>
               <div className={styles.cardSub}>
                 This tab is ready for more widgets (charts, tables, and live data) just like the wireframe.
