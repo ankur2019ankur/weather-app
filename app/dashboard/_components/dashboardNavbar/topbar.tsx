@@ -15,7 +15,7 @@ export default function Topbar() {
       <div className={styles.topbarLeft}>
         <div className={styles.logo}>DOP</div>
         <div>
-          <div className={styles.appName}>Weather Dashboard</div>
+          <div className={styles.appName}>PAM Dashboard</div>
           <div className={styles.appSub}>Live operational view</div>
         </div>
       </div>
