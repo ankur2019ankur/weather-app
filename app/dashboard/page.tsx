@@ -247,7 +247,7 @@ export default function DashboardPage() {
     <div className={styles.shell}>
       <Topbar />
 
-      <BottomNavbar tab={tab} setTab={setTab} />
+      <BottomNavbar />
 
       <div className={styles.layout}>
         <Sidebar tab={tab} setTab={setTab} />
@@ -268,13 +268,9 @@ export default function DashboardPage() {
           ) : (
             <div className={styles.card} aria-label="Tab placeholder">
               <div className={styles.cardTitle}>
-                {tab === "security"
-                  ? "Security Ops"
-                  : tab === "appdb"
-                    ? "Application & DB"
-                    : tab === "infra"
-                      ? "Infrastructure & Network"
-                      : "Service Management"}{" "}
+                {tab === "resources"
+                  ? "Resources"
+                  : "Overview"}{" "}
                 <span className={`${styles.badge} ${styles.badgeWarn}`}>Coming soon</span>
               </div>
               <div className={styles.cardSub}>

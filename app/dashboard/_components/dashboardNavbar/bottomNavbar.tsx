@@ -2,14 +2,7 @@
 
 import styles from "../../dashboard.module.css";
 
-type TabKey = "overview" | "security" | "appdb" | "infra" | "service";
-
-type BottomNavbarProps = {
-  tab: TabKey;
-  setTab: React.Dispatch<React.SetStateAction<TabKey>>;
-};
-
-export default function BottomNavbar({ tab, setTab }: BottomNavbarProps) {
+export default function BottomNavbar() {
   return (
     <>
 
