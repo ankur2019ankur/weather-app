@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { AUTH_CHANGED_EVENT, clearClientSession } from "@/lib/clientAuth";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
@@ -35,22 +36,13 @@ export default function Navbar() {
     };
 
     window.addEventListener("storage", onStorage);
-    window.addEventListener("auth-changed", readAuth as EventListener);
+    window.addEventListener(AUTH_CHANGED_EVENT, readAuth as EventListener);
 
     return () => {
       window.removeEventListener("storage", onStorage);
-      window.removeEventListener("auth-changed", readAuth as EventListener);
+      window.removeEventListener(AUTH_CHANGED_EVENT, readAuth as EventListener);
     };
   }, []);
-
-  const onLogout = () => {
-    try {
-      localStorage.removeItem("name");
-      localStorage.removeItem("cookie");
-    } finally {
-      window.dispatchEvent(new Event("auth-changed"));
-    }
-  };
 
   return (
     <header className={styles.header}>
@@ -72,7 +64,7 @@ export default function Navbar() {
 
           {isLoggedIn ? (
             <li>
-              <button type="button" className={`${styles.link} ${styles.linkButton}`} onClick={onLogout}>
+              <button type="button" className={`${styles.link} ${styles.linkButton}`} onClick={clearClientSession}>
                 Logout
               </button>
             </li>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { handleUnauthorizedResponse } from "@/lib/clientAuth";
 import styles from "./page.module.css";
 
 type ResourceItem = {
@@ -19,9 +19,17 @@ type ResourcesApiResponse = {
   Vault: ResourceItem[];
 };
 
-const API_URL = "http://localhost:3000/api/resources";
-const API_COOKIE = "pum_rest_auth=" + (localStorage.getItem("cookie") ?? "");
-console.log(API_COOKIE);
+async function readErrorMessage(res: Response): Promise<string> {
+  try {
+    const data = await res.json();
+    if (typeof data?.message === "string" && data.message.trim()) return data.message;
+    if (typeof data?.error === "string" && data.error.trim()) return data.error;
+    if (Array.isArray(data?.errors) && data.errors.length) return String(data.errors[0]);
+  } catch {
+    // ignore JSON parse errors
+  }
+  return `Request failed (${res.status})`;
+}
 
 export default function ResourcesPage() {
   const [resources, setResources] = useState<ResourceItem[]>([]);
@@ -66,22 +74,25 @@ export default function ResourcesPage() {
         setLoading(true);
         setError(null);
 
-        const payload = JSON.stringify({
-          cookie: API_COOKIE,
-        });
+        const cookie =
+          "pum_rest_auth=" + (localStorage.getItem("cookie") ?? "");
 
-        const config = {
-          method: "post" as const,
-          maxBodyLength: Infinity,
-          url: API_URL,
+        const res = await fetch("/api/resources", {
+          method: "POST",
           headers: {
+            Accept: "application/json",
             "Content-Type": "application/json",
           },
-          data: payload,
-        };
+          body: JSON.stringify({ cookie }),
+        });
 
-        const response = await axios.request<ResourcesApiResponse>(config);
-        const result = response.data;
+        if (!res.ok) {
+          handleUnauthorizedResponse(res);
+          setError(await readErrorMessage(res));
+          return;
+        }
+
+        const result = (await res.json()) as ResourcesApiResponse;
         setResources(Array.isArray(result.Vault) ? result.Vault : []);
       } catch (fetchError) {
         setError(
