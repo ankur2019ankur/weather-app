@@ -1,16 +1,21 @@
+"use client";
+
 import styles from "../../dashboard.module.css";
+import { useMemo } from "react";
+import Clock from "@/app/_component/Clock";
 
 type TopbarProps = {
-  clockText: string;
+  now: Date;
 };
 
-export default function Topbar({ clockText }: TopbarProps) {
+export default function Topbar() {
+
   return (
     <div className={styles.topbar}>
       <div className={styles.topbarLeft}>
         <div className={styles.logo}>DOP</div>
         <div>
-          <div className={styles.appName}>Weather Dashboard</div>
+          <div className={styles.appName}>PAM Dashboard</div>
           <div className={styles.appSub}>Live operational view</div>
         </div>
       </div>
@@ -19,7 +24,7 @@ export default function Topbar({ clockText }: TopbarProps) {
           <span className={styles.liveDot} />
           Live
         </div>
-        <div className={styles.clock}>{clockText}</div>
+        <div className={styles.clock}><Clock /></div>
       </div>
     </div>
   );

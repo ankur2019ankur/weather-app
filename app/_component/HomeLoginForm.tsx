@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
-import styles from "./login.module.css";
+import styles from "../login/login.module.css";
 
 type SpfLoginOk = {
   name: string;
@@ -24,7 +23,7 @@ async function readErrorMessage(res: Response): Promise<string> {
   return `Login failed (${res.status})`;
 }
 
-export default function LoginPage() {
+export default function HomeLoginForm() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -70,7 +69,7 @@ export default function LoginPage() {
 
       setSuccess(data);
       window.dispatchEvent(new Event("auth-changed"));
-      router.push("/state");
+      router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Network error");
     } finally {
@@ -79,64 +78,56 @@ export default function LoginPage() {
   }
 
   return (
-    <div className={styles.wrap}>
-      <div className={styles.card}>
-        <h1 className={styles.title}>Login</h1>
-        <p className={styles.subtitle}>Sign in to continue.</p>
+    <div className={styles.card}>
+      <h2 className={styles.title}>Login</h2>
+      <p className={styles.subtitle}>Sign in to continue.</p>
 
-        <form className={styles.form} onSubmit={onSubmit}>
-          <div className={styles.grid}>
-            <label className={styles.field}>
-              <span className={styles.label}>Username</span>
-              <input
-                className={styles.input}
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="admin"
-                autoComplete="username"
-                required
-              />
-            </label>
+      <form className={styles.form} onSubmit={onSubmit}>
+        <div className={styles.grid}>
+          <label className={styles.field}>
+            <span className={styles.label}>Username</span>
+            <input
+              className={styles.input}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="admin"
+              autoComplete="username"
+              required
+            />
+          </label>
 
-            <label className={styles.field}>
-              <span className={styles.label}>Password</span>
-              <input
-                className={styles.input}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="password890"
-                type="password"
-                autoComplete="current-password"
-                required
-              />
-            </label>
+          <label className={styles.field}>
+            <span className={styles.label}>Password</span>
+            <input
+              className={styles.input}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="password890"
+              type="password"
+              autoComplete="current-password"
+              required
+            />
+          </label>
+        </div>
+
+        {error ? (
+          <div className={styles.alertError} role="alert">
+            {error}
           </div>
+        ) : null}
 
-          {error ? (
-            <div className={styles.alertError} role="alert">
-              {error}
-            </div>
-          ) : null}
-
-          {success ? (
-            <div className={styles.alertSuccess} role="status">
-              Logged in successfully. Session saved to localStorage.
-            </div>
-          ) : null}
-
-          <div className={styles.actions}>
-            <button className={styles.primary} type="submit" disabled={!canSubmit}>
-              {isSubmitting ? "Logging in..." : "Login"}
-            </button>
-            <Link className={styles.secondary} href="/registration">
-              Create account
-            </Link>
-            <Link className={styles.tertiary} href="/">
-              Back to dashboard
-            </Link>
+        {success ? (
+          <div className={styles.alertSuccess} role="status">
+            Logged in successfully. Session saved to localStorage.
           </div>
-        </form>
-      </div>
+        ) : null}
+
+        <div className={styles.actions}>
+          <button className={styles.primary} type="submit" disabled={!canSubmit}>
+            {isSubmitting ? "Logging in..." : "Login"}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

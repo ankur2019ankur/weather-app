@@ -1,45 +1,20 @@
-import CurrentCondition from "./_component/frontpage/currentcondition";
-import Forecast from "./_component/frontpage/forecast";
-import HighlightOfDay from "./_component/frontpage/HighlightOfDay";
-import Recommentation from "./_component/frontpage/recommentation";
 import styles from "./page.module.css";
+import HomeLoginForm from "./_component/HomeLoginForm";
 
 export default function Home() {
   return (
     <div className={styles.shell}>
       <section className={styles.hero} aria-label="Dashboard header">
         <div className={styles.heroText}>
-          <h1 className={styles.title}>Weather Dashboard</h1>
+          <h1 className={styles.title}>Privileged Access Manager</h1>
           <p className={styles.subtitle}>
-            Search a city to view current conditions, forecasts, and key stats.
+            Manage and control access to privileged resources.
           </p>
         </div>
-
-        <form className={styles.search} action="#" role="search" aria-label="Search city">
-          <label className={styles.srOnly} htmlFor="city">
-            City
-          </label>
-          <input
-            id="city"
-            name="city"
-            className={styles.searchInput}
-            placeholder="Search city (e.g., London, Tokyo, Lagos)"
-            autoComplete="off"
-          />
-          <button className={styles.searchButton} type="button">
-            Search
-          </button>
-        </form>
       </section>
 
-      <section className={styles.grid} aria-label="Dashboard content">
-        <CurrentCondition />
-
-        <Forecast />
-
-        <HighlightOfDay />
-
-        <Recommentation />
+      <section className={`${styles.grid} ${styles.gridCenter}`} aria-label="Dashboard content">
+        <HomeLoginForm />
       </section>
     </div>
   );

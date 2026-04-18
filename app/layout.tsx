@@ -3,8 +3,8 @@ import "./globals.css";
 import Navbar from "./_component/Navbar";
 
 export const metadata: Metadata = {
-  title: "Weather App",
-  description: "Weather App",
+  title: "Privileged Access Manager",
+  description: "Manage and control access to privileged resources",
 };
 
 export default function RootLayout({

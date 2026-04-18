@@ -22,6 +22,7 @@ import SecurityOperations from "./_components/security_operations/security_opera
 import Topbar from "./_components/dashboardNavbar/topbar";
 import BottomNavbar from "./_components/dashboardNavbar/bottomNavbar";
 import Sidebar, { type TabKey } from "./_components/dashboardNavbar/sidebar";
+import ResourcesPage from "./resources/page";
 
 ChartJS.register(
   ArcElement,
@@ -127,13 +128,6 @@ type AlertKind = "critical" | "warning";
 export default function DashboardPage() {
   const now = useClock();
   const [tab, setTab] = useState<TabKey>("overview");
-
-  const clockText = useMemo(() => {
-    const h = String(now.getHours()).padStart(2, "0");
-    const m = String(now.getMinutes()).padStart(2, "0");
-    const s = String(now.getSeconds()).padStart(2, "0");
-    return `${h}:${m}:${s} IST`;
-  }, [now]);
 
   const refreshText = useMemo(() => {
     const h = String(now.getHours()).padStart(2, "0");
@@ -252,9 +246,9 @@ export default function DashboardPage() {
 
   return (
     <div className={styles.shell}>
-      <Topbar clockText={clockText} />
+      <Topbar />
 
-      <BottomNavbar tab={tab} setTab={setTab} />
+      <BottomNavbar />
 
       <div className={styles.layout}>
         <Sidebar tab={tab} setTab={setTab} />
@@ -272,17 +266,12 @@ export default function DashboardPage() {
 
               <ActiveAlert activeAlerts={activeAlerts} />
             </>
+          ) : tab === "resources" ? (
+            <ResourcesPage />
           ) : (
             <div className={styles.card} aria-label="Tab placeholder">
               <div className={styles.cardTitle}>
-                {tab === "security"
-                  ? "Security Ops"
-                  : tab === "appdb"
-                    ? "Application & DB"
-                    : tab === "infra"
-                      ? "Infrastructure & Network"
-                      : "Service Management"}{" "}
-                <span className={`${styles.badge} ${styles.badgeWarn}`}>Coming soon</span>
+                Overview <span className={`${styles.badge} ${styles.badgeWarn}`}>Coming soon</span>
               </div>
               <div className={styles.cardSub}>
                 This tab is ready for more widgets (charts, tables, and live data) just like the wireframe.
@@ -299,9 +288,8 @@ export default function DashboardPage() {
       </div>
 
       <footer className={styles.footer}>
-        <span>Weather Dashboard v1</span>
+        <span>Privileged Access Manager</span>
         <span>{refreshText}</span>
-        <span>Data source: OpenWeatherMap API</span>
       </footer>
     </div>
   );
