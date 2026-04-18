@@ -21,8 +21,8 @@ export default function Navbar() {
   useEffect(() => {
     const readAuth = () => {
       try {
-        const token = localStorage.getItem("token");
-        setIsLoggedIn(Boolean(token && token.trim()));
+        const cookie = localStorage.getItem("cookie");
+        setIsLoggedIn(Boolean(cookie && cookie.trim()));
       } catch {
         setIsLoggedIn(false);
       }
@@ -31,7 +31,7 @@ export default function Navbar() {
     readAuth();
 
     const onStorage = (e: StorageEvent) => {
-      if (e.key === "token") readAuth();
+      if (e.key === "cookie") readAuth();
     };
 
     window.addEventListener("storage", onStorage);
@@ -45,9 +45,8 @@ export default function Navbar() {
 
   const onLogout = () => {
     try {
-      localStorage.removeItem("token");
-      localStorage.removeItem("email");
-      localStorage.removeItem("password");
+      localStorage.removeItem("name");
+      localStorage.removeItem("cookie");
     } finally {
       window.dispatchEvent(new Event("auth-changed"));
     }

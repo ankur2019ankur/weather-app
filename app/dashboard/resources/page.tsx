@@ -20,7 +20,7 @@ type ResourcesApiResponse = {
 };
 
 const API_URL = "http://localhost:3000/api/resources";
-const API_COOKIE = process.env.NEXT_PUBLIC_RESOURCES_API_COOKIE;
+const API_COOKIE = "pum_rest_auth=" + (localStorage.getItem("cookie") ?? "");
 console.log(API_COOKIE);
 
 export default function ResourcesPage() {

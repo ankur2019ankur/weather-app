@@ -5,12 +5,10 @@ import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
 import styles from "../login/login.module.css";
 
-type LoginResponse = {
-  token: string;
-  user: {
-    id: string;
-    email: string;
-  };
+type SpfLoginOk = {
+  name: string;
+  identityContent: string;
+  message: string;
 };
 
 async function readErrorMessage(res: Response): Promise<string> {
@@ -27,16 +25,16 @@ async function readErrorMessage(res: Response): Promise<string> {
 
 export default function HomeLoginForm() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<LoginResponse | null>(null);
+  const [success, setSuccess] = useState<SpfLoginOk | null>(null);
 
   const canSubmit = useMemo(() => {
-    return email.trim().includes("@") && password.length >= 1 && !isSubmitting;
-  }, [email, isSubmitting, password.length]);
+    return username.trim().length >= 1 && password.length >= 1 && !isSubmitting;
+  }, [username, isSubmitting, password.length]);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -47,14 +45,14 @@ export default function HomeLoginForm() {
     setSuccess(null);
 
     try {
-      const res = await fetch("http://localhost:3005/api/users/login", {
+      const res = await fetch("/api/spf/login", {
         method: "POST",
         headers: {
-          accept: "application/json",
+          Accept: "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: email.trim(),
+          name: username.trim(),
           password,
         }),
       });
@@ -64,15 +62,14 @@ export default function HomeLoginForm() {
         return;
       }
 
-      const data = (await res.json()) as LoginResponse;
+      const data = (await res.json()) as SpfLoginOk;
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("email", email.trim());
-      localStorage.setItem("password", password);
+      localStorage.setItem("name", data.name);
+      localStorage.setItem("cookie", data.identityContent);
 
       setSuccess(data);
       window.dispatchEvent(new Event("auth-changed"));
-      router.push("/state");
+      router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Network error");
     } finally {
@@ -91,11 +88,10 @@ export default function HomeLoginForm() {
             <span className={styles.label}>Username</span>
             <input
               className={styles.input}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               placeholder="admin"
-              autoComplete="email"
-              inputMode="email"
+              autoComplete="username"
               required
             />
           </label>
@@ -122,7 +118,7 @@ export default function HomeLoginForm() {
 
         {success ? (
           <div className={styles.alertSuccess} role="status">
-            Logged in successfully. Token saved to localStorage.
+            Logged in successfully. Session saved to localStorage.
           </div>
         ) : null}
 
