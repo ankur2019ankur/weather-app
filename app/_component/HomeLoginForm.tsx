@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 import { useMemo, useState } from "react";
-import styles from "../login/login.module.css";
+import styles from "./HomeLoginForm.module.css";
 
 type SpfLoginOk = {
   name: string;
