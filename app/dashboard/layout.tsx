@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { AUTH_CHANGED_EVENT, isClientLoggedIn } from "@/lib/clientAuth";
+import StoreProvider from "./StoreProvider";
 import styles from "./dashboard.module.css";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
@@ -52,5 +53,5 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     );
   }
 
-  return <>{children}</>;
+  return <StoreProvider>{children}</StoreProvider>;
 }

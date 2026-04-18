@@ -1,5 +1,6 @@
 "use client";
 
+import { useAppSelector } from "@/lib/hooks";
 import styles from "../../dashboard.module.css";
 import type { TabKey } from "./sidebar";
 
@@ -9,6 +10,15 @@ type BottomNavbarProps = {
 };
 
 export default function BottomNavbar({ tab, setTab }: BottomNavbarProps) {
+  const { items, status } = useAppSelector((s) => s.resources);
+
+  const resourcesCountLabel =
+    status === "loading" && items.length === 0
+      ? "…"
+      : status === "failed" && items.length === 0
+        ? "—"
+        : items.length.toLocaleString();
+
   return (
     <>
 
@@ -28,7 +38,7 @@ export default function BottomNavbar({ tab, setTab }: BottomNavbarProps) {
           aria-label="Resources — show resources list"
         >
           <div className={styles.kpiLabel}>Resources</div>
-          <div className={styles.kpiValue}>12,840</div>
+          <div className={styles.kpiValue}>{resourcesCountLabel}</div>
           <div className={`${styles.kpiTrend} ${styles.trendUp}`}>▲ No of Resources</div>
         </div>
         <div className={styles.kpiCard}>
