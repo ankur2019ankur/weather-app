@@ -1,7 +1,7 @@
 import axios from "axios";
 import https from "https";
 
-const RESOURCES_URL = "https://192.168.1.209/rest/prvcrdvlt/Resources";
+const RESOURCES_URL = `${process.env.PAM_BASE_URL}/rest/prvcrdvlt/Resources`;
 
 export const runtime = "nodejs";
 

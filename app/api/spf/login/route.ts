@@ -1,7 +1,7 @@
 import axios from "axios";
 import https from "https";
 
-const SPF_BASE = process.env.SPF_BASE_URL ?? "https://192.168.1.209";
+const SPF_BASE = process.env.PAM_BASE_URL ?? "https://192.168.1.209";
 const SPF_UTIL = `${SPF_BASE.replace(/\/$/, "")}/SPF.Util`;
 
 export const runtime = "nodejs";

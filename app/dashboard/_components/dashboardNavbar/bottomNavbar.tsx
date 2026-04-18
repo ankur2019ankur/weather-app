@@ -1,16 +1,35 @@
 "use client";
 
 import styles from "../../dashboard.module.css";
+import type { TabKey } from "./sidebar";
 
-export default function BottomNavbar() {
+type BottomNavbarProps = {
+  tab: TabKey;
+  setTab: (tab: TabKey) => void;
+};
+
+export default function BottomNavbar({ tab, setTab }: BottomNavbarProps) {
   return (
     <>
 
       <div className={styles.kpiBar} aria-label="Key performance indicators">
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiLabel}>Online Users</div>
+        <div
+          className={`${styles.kpiCard} ${tab === "resources" ? styles.kpiCardActive : ""}`}
+          onClick={() => setTab("resources")}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setTab("resources");
+            }
+          }}
+          aria-pressed={tab === "resources"}
+          aria-label="Resources — show resources list"
+        >
+          <div className={styles.kpiLabel}>Resources</div>
           <div className={styles.kpiValue}>12,840</div>
-          <div className={`${styles.kpiTrend} ${styles.trendUp}`}>▲ 4.2% vs yesterday</div>
+          <div className={`${styles.kpiTrend} ${styles.trendUp}`}>▲ No of Resources</div>
         </div>
         <div className={styles.kpiCard}>
           <div className={styles.kpiLabel}>Business Volume</div>

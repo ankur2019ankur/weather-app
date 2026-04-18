@@ -248,7 +248,7 @@ export default function DashboardPage() {
     <div className={styles.shell}>
       <Topbar />
 
-      <BottomNavbar />
+      <BottomNavbar tab={tab} setTab={setTab} />
 
       <div className={styles.layout}>
         <Sidebar tab={tab} setTab={setTab} />
