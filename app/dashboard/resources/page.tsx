@@ -1,33 +1,112 @@
 "use client";
 
-import { useEffect } from "react";
-import { fetchResources } from "@/lib/resourcesSlice";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useEffect, useMemo, useState } from "react";
+import { handleUnauthorizedResponse } from "@/lib/clientAuth";
+import type { ResourceItem } from "@/lib/resourcesSlice";
 import styles from "./page.module.css";
 
+type ResourcesApiResponse = {
+  Vault?: ResourceItem[];
+  message?: string;
+  error?: string;
+  errors?: string[];
+};
+
+async function readErrorMessage(res: Response): Promise<string> {
+  try {
+    const data = (await res.json()) as ResourcesApiResponse;
+    if (typeof data.message === "string" && data.message.trim()) return data.message;
+    if (typeof data.error === "string" && data.error.trim()) return data.error;
+    if (Array.isArray(data.errors) && data.errors.length) return String(data.errors[0]);
+  } catch {
+    // Ignore response parsing failures and fallback to status-based message.
+  }
+  return `Request failed (${res.status})`;
+}
+
 export default function ResourcesPage() {
-  const dispatch = useAppDispatch();
-  const { items: resources, status, error } = useAppSelector((s) => s.resources);
+  const [resources, setResources] = useState<ResourceItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchResources());
-    }
-  }, [dispatch, status]);
+    let isMounted = true;
 
-  const loading = status === "loading" || status === "idle";
-  const fetchError = status === "failed" ? error : null;
+    async function fetchResourceList() {
+      setLoading(true);
+      setFetchError(null);
+
+      const cookie = "pum_rest_auth=" + (localStorage.getItem("cookie") ?? "");
+
+      try {
+        const res = await fetch("/api/resources", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cookie }),
+        });
+
+        if (!res.ok) {
+          handleUnauthorizedResponse(res);
+          throw new Error(await readErrorMessage(res));
+        }
+
+        const data = (await res.json()) as ResourcesApiResponse;
+        const items = Array.isArray(data.Vault) ? data.Vault : [];
+
+        if (isMounted) {
+          setResources(items);
+        }
+      } catch (error: unknown) {
+        if (isMounted) {
+          setFetchError(
+            error instanceof Error ? error.message : "Unable to fetch resources.",
+          );
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void fetchResourceList();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const escapeCsvValue = (value: string | number) => {
     const stringValue = String(value);
     return `"${stringValue.replace(/"/g, '""')}"`;
   };
 
+  const normalizeText = (value: string | undefined) => value?.toLowerCase().trim() ?? "";
+
+  const filteredResources = useMemo(() => {
+    const normalizedSearch = searchTerm.toLowerCase().trim();
+    if (!normalizedSearch) return resources;
+
+    return resources.filter((item) => {
+      const searchableValues = [
+        normalizeText(item.name),
+        normalizeText(item.type),
+        normalizeText(item.resource_profile_name),
+      ];
+
+      return searchableValues.some((value) => value.includes(normalizedSearch));
+    });
+  }, [resources, searchTerm]);
+
   const handleExportCsv = () => {
-    if (resources.length === 0) return;
+    if (filteredResources.length === 0) return;
 
     const headers = ["Name", "Type", "Profile", "Discovery"];
-    const rows = resources.map((item) => [
+    const rows = filteredResources.map((item) => [
       item.name ?? "",
       item.type ?? "",
       item.resource_profile_name ?? "-",
@@ -60,11 +139,19 @@ export default function ResourcesPage() {
       {!loading && !fetchError && (
         <>
           <div className={styles.actions}>
+            <input
+              type="text"
+              className={styles.searchInput}
+              placeholder="Search by name, type, or profile"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              aria-label="Search resources"
+            />
             <button
               type="button"
               className={styles.exportButton}
               onClick={handleExportCsv}
-              disabled={resources.length === 0}
+              disabled={filteredResources.length === 0}
             >
               Export CSV
             </button>
@@ -80,7 +167,7 @@ export default function ResourcesPage() {
                 </tr>
               </thead>
               <tbody>
-                {resources.map((item) => (
+                {filteredResources.map((item) => (
                   <tr key={item.id}>
                     <td>{item.name}</td>
                     <td>{item.type}</td>
@@ -90,8 +177,9 @@ export default function ResourcesPage() {
                 ))}
               </tbody>
             </table>
-            {resources.length === 0 && (
-              <p className={styles.message}>No resources found.</p>
+            {resources.length === 0 && <p className={styles.message}>No resources found.</p>}
+            {resources.length > 0 && filteredResources.length === 0 && (
+              <p className={styles.message}>No resources match your search.</p>
             )}
           </div>
         </>

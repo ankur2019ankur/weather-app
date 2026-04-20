@@ -8,8 +8,30 @@
 
 .actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
   margin-bottom: 0.75rem;
+}
+
+.searchInput {
+  width: min(360px, 100%);
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: #0f172a;
+  background: #ffffff;
+}
+
+.searchInput::placeholder {
+  color: #64748b;
+}
+
+.searchInput:focus {
+  outline: 2px solid #bfdbfe;
+  outline-offset: 1px;
 }
 
 .exportButton {
