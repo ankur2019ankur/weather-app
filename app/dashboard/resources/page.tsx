@@ -25,10 +25,13 @@ async function readErrorMessage(res: Response): Promise<string> {
 }
 
 export default function ResourcesPage() {
+  const DEFAULT_PAGE_SIZE = 10;
   const [resources, setResources] = useState<ResourceItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
 
   useEffect(() => {
     let isMounted = true;
@@ -102,6 +105,21 @@ export default function ResourcesPage() {
     });
   }, [resources, searchTerm]);
 
+  const totalPages = Math.max(1, Math.ceil(filteredResources.length / pageSize));
+
+  const paginatedResources = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredResources.slice(start, start + pageSize);
+  }, [filteredResources, currentPage, pageSize]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, pageSize]);
+
+  useEffect(() => {
+    setCurrentPage((prevPage) => Math.min(prevPage, totalPages));
+  }, [totalPages]);
+
   const handleExportCsv = () => {
     if (filteredResources.length === 0) return;
 
@@ -147,14 +165,32 @@ export default function ResourcesPage() {
               onChange={(event) => setSearchTerm(event.target.value)}
               aria-label="Search resources"
             />
-            <button
-              type="button"
-              className={styles.exportButton}
-              onClick={handleExportCsv}
-              disabled={filteredResources.length === 0}
-            >
-              Export CSV
-            </button>
+            <div className={styles.actionButtons}>
+              <label className={styles.limitControl}>
+                Limit
+                <input
+                  type="number"
+                  min={1}
+                  className={styles.limitInput}
+                  value={pageSize}
+                  onChange={(event) => {
+                    const parsed = Number.parseInt(event.target.value, 10);
+                    if (!Number.isNaN(parsed) && parsed > 0) {
+                      setPageSize(parsed);
+                    }
+                  }}
+                  aria-label="Rows per page"
+                />
+              </label>
+              <button
+                type="button"
+                className={styles.exportButton}
+                onClick={handleExportCsv}
+                disabled={filteredResources.length === 0}
+              >
+                Export CSV
+              </button>
+            </div>
           </div>
           <div className={styles.tableContainer}>
             <table className={styles.table}>
@@ -167,7 +203,7 @@ export default function ResourcesPage() {
                 </tr>
               </thead>
               <tbody>
-                {filteredResources.map((item) => (
+                {paginatedResources.map((item) => (
                   <tr key={item.id}>
                     <td>{item.name}</td>
                     <td>{item.type}</td>
@@ -182,6 +218,31 @@ export default function ResourcesPage() {
               <p className={styles.message}>No resources match your search.</p>
             )}
           </div>
+          {filteredResources.length > 0 && (
+            <div className={styles.pagination}>
+              <button
+                type="button"
+                className={styles.paginationButton}
+                onClick={() => setCurrentPage((prevPage) => Math.max(1, prevPage - 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              <p className={styles.pageInfo}>
+                Page {currentPage} of {totalPages}
+              </p>
+              <button
+                type="button"
+                className={styles.paginationButton}
+                onClick={() =>
+                  setCurrentPage((prevPage) => Math.min(totalPages, prevPage + 1))
+                }
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          )}
         </>
       )}
     </section>

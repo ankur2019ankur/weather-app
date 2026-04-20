@@ -10,14 +10,14 @@ type BottomNavbarProps = {
 };
 
 export default function BottomNavbar({ tab, setTab }: BottomNavbarProps) {
-  const { items, status } = useAppSelector((s) => s.resources);
+  const { count, status } = useAppSelector((s) => s.resources);
 
   const resourcesCountLabel =
-    status === "loading" && items.length === 0
+    status === "loading" && count === 0
       ? "…"
-      : status === "failed" && items.length === 0
+      : status === "failed" && count === 0
         ? "—"
-        : items.length.toLocaleString();
+        : count.toLocaleString();
 
   return (
     <>

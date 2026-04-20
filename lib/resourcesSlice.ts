@@ -48,18 +48,19 @@ export const fetchResources = createAsyncThunk(
     }
 
     const result = (await res.json()) as ResourcesApiResponse;
-    return Array.isArray(result.Vault) ? result.Vault : [];
+    const items = Array.isArray(result.Vault) ? result.Vault : [];
+    return items.length;
   },
 );
 
 type ResourcesState = {
-  items: ResourceItem[];
+  count: number;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 };
 
 const initialState: ResourcesState = {
-  items: [],
+  count: 0,
   status: "idle",
   error: null,
 };
@@ -76,7 +77,7 @@ const resourcesSlice = createSlice({
       })
       .addCase(fetchResources.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = action.payload;
+        state.count = action.payload;
       })
       .addCase(fetchResources.rejected, (state, action) => {
         state.status = "failed";
