@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./HomeLoginForm.module.css";
 
 type SpfLoginOk = {
@@ -48,6 +48,14 @@ export default function HomeLoginForm() {
   const canSubmit = useMemo(() => {
     return username.trim().length >= 1 && password.length >= 1 && !isSubmitting;
   }, [username, isSubmitting, password.length]);
+
+  useEffect(() => {
+    const storedName = localStorage.getItem("name");
+    const storedCookie = localStorage.getItem("cookie");
+    if (storedName && storedCookie) {
+      router.replace("/dashboard");
+    }
+  }, [router]);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
