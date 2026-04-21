@@ -11,6 +11,19 @@ type SpfLoginOk = {
   message: string;
 };
 
+async function readUserList(): Promise<string[]> {
+  const res = await fetch("/userslist.txt", { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error("Unable to validate username right now. Please try again.");
+  }
+
+  const text = await res.text();
+  return text
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
 async function readErrorMessage(res: Response): Promise<string> {
   try {
     const data = await res.json();
@@ -40,11 +53,19 @@ export default function HomeLoginForm() {
     e.preventDefault();
     if (!canSubmit) return;
 
+    const trimmedUsername = username.trim();
+
     setIsSubmitting(true);
     setError(null);
     setSuccess(null);
 
     try {
+      const users = await readUserList();
+      if (!users.includes(trimmedUsername)) {
+        setError("Username not found in allowed user list.");
+        return;
+      }
+
       const res = await fetch("/api/spf/login", {
         method: "POST",
         headers: {
@@ -52,7 +73,7 @@ export default function HomeLoginForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: username.trim(),
+          name: trimmedUsername,
           password,
         }),
       });
