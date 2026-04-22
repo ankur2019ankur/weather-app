@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { handleUnauthorizedResponse } from "@/lib/clientAuth";
 import type { ResourceItem } from "@/lib/resourcesSlice";
+import UserRoleList from "./_component/userRoleList";
 import styles from "./page.module.css";
 
 type ResourcesApiResponse = {
@@ -337,53 +338,14 @@ export default function ResourcesPage() {
           )}
         </>
       )}
-      {isRolesModalOpen && (
-        <div className={styles.modalOverlay} role="dialog" aria-modal="true">
-          <div className={styles.modalContent}>
-            <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>
-                Assigned Roles{selectedRoleName ? ` - ${selectedRoleName}` : ""}
-              </h2>
-              <button
-                type="button"
-                className={styles.modalCloseButton}
-                onClick={() => setIsRolesModalOpen(false)}
-              >
-                Close
-              </button>
-            </div>
-
-            {roleModalLoading && <p className={styles.message}>Loading assigned roles...</p>}
-            {roleModalError && <p className={styles.error}>Error: {roleModalError}</p>}
-
-            {!roleModalLoading && !roleModalError && (
-              <div className={styles.modalTableWrapper}>
-                <table className={styles.table}>
-                  <thead>
-                    <tr>
-                      <th>Type</th>
-                      <th>Source</th>
-                      <th>Data</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {roleRows.map((includeRow, index) => (
-                      <tr key={`${includeRow.type ?? "type"}-${index}`}>
-                        <td>{includeRow.type ?? "-"}</td>
-                        <td>{includeRow.source ?? "-"}</td>
-                        <td>{includeRow.data ?? "-"}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {roleRows.length === 0 && (
-                  <p className={styles.message}>No assigned roles found in this role.</p>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      <UserRoleList
+        isOpen={isRolesModalOpen}
+        selectedRoleName={selectedRoleName}
+        isLoading={roleModalLoading}
+        error={roleModalError}
+        roleRows={roleRows}
+        onClose={() => setIsRolesModalOpen(false)}
+      />
     </section>
   );
 }

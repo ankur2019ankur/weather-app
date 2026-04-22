@@ -228,32 +228,9 @@ type UserRoleDetail = {
       new Set(filteredAssignments.flatMap((assignment) => extractUserRoleIdsFromAssignment(assignment))),
     );
 
-
-    return Response.json(
-      {
-        ...userRoleIds,
-        // Result: {
-        //   ...(assignmentsData?.Result ?? {}),
-        //   Assignment: filteredAssignments,
-        //   UserRole: {
-        //     id: userRoles[0]?.id ?? Number(resourceId),
-        //     name:
-        //       userRoles.length === 1
-        //         ? userRoles[0]?.name
-        //         : `${userRoles.length} roles`,
-        //     include: includeRows,
-        //   },
-        //   UserRoles: userRoles,
-        //   ResourcePool: filteredResourcePools,
-        // },
-      },
-      { status: 200 },
-    );
-
-   
     const userRoleDetailResponses = await Promise.all(
       userRoleIds.map((userRoleId) =>
-        axios.get(`${PAM_BASE_URL}/rest/accessctrl/userrole/${userRoleId}`, {
+        axios.get(`${PAM_BASE_URL}/rest/accessctrl/role/${userRoleId}`, {
           headers: {
             Cookie: incomingCookie,
             Accept: "application/json, text/plain, */*",
