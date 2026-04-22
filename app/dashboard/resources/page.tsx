@@ -12,6 +12,25 @@ type ResourcesApiResponse = {
   errors?: string[];
 };
 
+type UserRoleIncludeItem = {
+  type?: string;
+  source?: string;
+  data?: string;
+};
+
+type UserRoleApiResponse = {
+  Result?: {
+    UserRole?: {
+      id?: number;
+      name?: string;
+      include?: UserRoleIncludeItem[];
+    };
+  };
+  message?: string;
+  error?: string;
+  errors?: string[];
+};
+
 async function readErrorMessage(res: Response): Promise<string> {
   try {
     const data = (await res.json()) as ResourcesApiResponse;
@@ -32,6 +51,12 @@ export default function ResourcesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [isRolesModalOpen, setIsRolesModalOpen] = useState(false);
+  const [roleRows, setRoleRows] = useState<UserRoleIncludeItem[]>([]);
+  const [roleModalLoading, setRoleModalLoading] = useState(false);
+  const [roleModalError, setRoleModalError] = useState<string | null>(null);
+  const [selectedRoleName, setSelectedRoleName] = useState<string>("");
 
   useEffect(() => {
     let isMounted = true;
@@ -147,6 +172,47 @@ export default function ResourcesPage() {
     URL.revokeObjectURL(url);
   };
 
+  const openAssignedRolesModal = async (roleId: string) => {
+    setRoleModalLoading(true);
+    setRoleModalError(null);
+    setRoleRows([]);
+    setSelectedRoleName("");
+    setIsRolesModalOpen(true);
+    setOpenMenuId(null);
+
+    const cookie = "pum_rest_auth=" + (localStorage.getItem("cookie") ?? "");
+
+    try {
+      const res = await fetch(`/api/resources/roles/${encodeURIComponent(roleId)}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cookie }),
+      });
+
+      if (!res.ok) {
+        handleUnauthorizedResponse(res);
+        throw new Error(await readErrorMessage(res));
+      }
+
+      const data = (await res.json()) as UserRoleApiResponse;
+      const includeRows = Array.isArray(data.Result?.UserRole?.include)
+        ? data.Result?.UserRole?.include
+        : [];
+
+      setRoleRows(includeRows);
+      setSelectedRoleName(data.Result?.UserRole?.name ?? `Role ${roleId}`);
+    } catch (error: unknown) {
+      setRoleModalError(
+        error instanceof Error ? error.message : "Unable to fetch assigned roles.",
+      );
+    } finally {
+      setRoleModalLoading(false);
+    }
+  };
+
   return (
     <section className={styles.wrapper}>
       <h1 className={styles.title}>Resources</h1>
@@ -200,6 +266,7 @@ export default function ResourcesPage() {
                   <th>Type</th>
                   <th>Profile</th>
                   <th>Discovery</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -209,6 +276,31 @@ export default function ResourcesPage() {
                     <td>{item.type}</td>
                     <td>{item.resource_profile_name ?? "-"}</td>
                     <td>{item.enable_discovery === 1 ? "Enabled" : "Disabled"}</td>
+                    <td className={styles.actionCell}>
+                      <div className={styles.actionDropdown}>
+                        <button
+                          type="button"
+                          className={styles.actionButton}
+                          onClick={() =>
+                            setOpenMenuId((prev) => (prev === item.id ? null : item.id))
+                          }
+                          aria-expanded={openMenuId === item.id}
+                        >
+                          Actions
+                        </button>
+                        {openMenuId === item.id && (
+                          <div className={styles.dropdownMenu}>
+                            <button
+                              type="button"
+                              className={styles.dropdownItem}
+                              onClick={() => void openAssignedRolesModal(item.id)}
+                            >
+                              View Assigned Roles
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -244,6 +336,53 @@ export default function ResourcesPage() {
             </div>
           )}
         </>
+      )}
+      {isRolesModalOpen && (
+        <div className={styles.modalOverlay} role="dialog" aria-modal="true">
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>
+                Assigned Roles{selectedRoleName ? ` - ${selectedRoleName}` : ""}
+              </h2>
+              <button
+                type="button"
+                className={styles.modalCloseButton}
+                onClick={() => setIsRolesModalOpen(false)}
+              >
+                Close
+              </button>
+            </div>
+
+            {roleModalLoading && <p className={styles.message}>Loading assigned roles...</p>}
+            {roleModalError && <p className={styles.error}>Error: {roleModalError}</p>}
+
+            {!roleModalLoading && !roleModalError && (
+              <div className={styles.modalTableWrapper}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Source</th>
+                      <th>Data</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {roleRows.map((includeRow, index) => (
+                      <tr key={`${includeRow.type ?? "type"}-${index}`}>
+                        <td>{includeRow.type ?? "-"}</td>
+                        <td>{includeRow.source ?? "-"}</td>
+                        <td>{includeRow.data ?? "-"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {roleRows.length === 0 && (
+                  <p className={styles.message}>No assigned roles found in this role.</p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </section>
   );
