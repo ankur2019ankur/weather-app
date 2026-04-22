@@ -20,10 +20,6 @@ export default function Topbar() {
         </div>
       </div>
       <div className={styles.topbarRight}>
-        <div className={styles.liveIndicator}>
-          <span className={styles.liveDot} />
-          Live
-        </div>
         <div className={styles.clock}><Clock /></div>
       </div>
     </div>

@@ -92,7 +92,7 @@
   }
   
   .primary {
-    background: rgba(0, 0, 0, 0.92);
+    background: #38bdf8;
     color: white;
     cursor: pointer;
   }
@@ -165,8 +165,8 @@
     }
   
     .primary {
-      background: rgba(255, 255, 255, 0.92);
-      color: rgba(0, 0, 0, 0.92);
+      background: #38bdf8;
+      color: white;
     }
   
     .secondary:hover,

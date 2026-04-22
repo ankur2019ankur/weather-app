@@ -2,14 +2,27 @@
 
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
-import { useMemo, useState } from "react";
-import styles from "../login/login.module.css";
+import { useEffect, useMemo, useState } from "react";
+import styles from "./HomeLoginForm.module.css";
 
 type SpfLoginOk = {
   name: string;
   identityContent: string;
   message: string;
 };
+
+async function readUserList(): Promise<string[]> {
+  const res = await fetch("/userslist.txt", { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error("Unable to validate username right now. Please try again.");
+  }
+
+  const text = await res.text();
+  return text
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
 
 async function readErrorMessage(res: Response): Promise<string> {
   try {
@@ -36,15 +49,31 @@ export default function HomeLoginForm() {
     return username.trim().length >= 1 && password.length >= 1 && !isSubmitting;
   }, [username, isSubmitting, password.length]);
 
+  useEffect(() => {
+    const storedName = localStorage.getItem("name");
+    const storedCookie = localStorage.getItem("cookie");
+    if (storedName && storedCookie) {
+      router.replace("/dashboard");
+    }
+  }, [router]);
+
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!canSubmit) return;
+
+    const trimmedUsername = username.trim();
 
     setIsSubmitting(true);
     setError(null);
     setSuccess(null);
 
     try {
+      const users = await readUserList();
+      if (!users.includes(trimmedUsername)) {
+        setError("Username not found in allowed user list.");
+        return;
+      }
+
       const res = await fetch("/api/spf/login", {
         method: "POST",
         headers: {
@@ -52,7 +81,7 @@ export default function HomeLoginForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: username.trim(),
+          name: trimmedUsername,
           password,
         }),
       });

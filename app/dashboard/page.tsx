@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { fetchResources } from "@/lib/resourcesSlice";
+import { useAppDispatch } from "@/lib/hooks";
 import styles from "./dashboard.module.css";
 
 import {
@@ -126,8 +128,13 @@ const temperatureBarOptions = {
 type AlertKind = "critical" | "warning";
 
 export default function DashboardPage() {
+  const dispatch = useAppDispatch();
   const now = useClock();
   const [tab, setTab] = useState<TabKey>("overview");
+
+  useEffect(() => {
+    dispatch(fetchResources());
+  }, [dispatch]);
 
   const refreshText = useMemo(() => {
     const h = String(now.getHours()).padStart(2, "0");
@@ -248,7 +255,7 @@ export default function DashboardPage() {
     <div className={styles.shell}>
       <Topbar />
 
-      <BottomNavbar />
+      <BottomNavbar tab={tab} setTab={setTab} />
 
       <div className={styles.layout}>
         <Sidebar tab={tab} setTab={setTab} />

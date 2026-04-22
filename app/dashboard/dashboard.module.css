@@ -185,6 +185,14 @@
   background: var(--bg2);
 }
 
+.kpiCardActive {
+  background: var(--blue-bg);
+}
+
+.kpiCardActive:hover {
+  background: var(--blue-bg);
+}
+
 .kpiLabel {
   font-size: 10px;
   color: var(--text2);
